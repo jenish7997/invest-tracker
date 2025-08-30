@@ -1,0 +1,147 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="logo">
+          <span class="logo-icon">💰</span>
+          <h1 class="page-title">
+            <span class="page-icon">💰</span>
+            Investment Tracker
+          </h1>
+        </div>
+        @if (currentUser) {
+          <div class="welcome-text">
+            <h2 class="welcome-title">
+              <span class="wave">👋</span> Welcome back, 
+              <span class="user-name-highlight">{{ currentUser.name }}</span>!
+            </h2>
+            <p class="welcome-subtitle">Here's your investment portfolio overview</p>
+          </div>
+        }
+      </div>
+      <div class="header-right">
+        <div class="user-menu">
+          @if (currentUser) {
+            <div class="user-info">
+              <div class="user-avatar">{{ currentUser.name.charAt(0).toUpperCase() }}</div>
+              <div class="user-details">
+                <span class="user-name">{{ currentUser.name }}</span>
+                <span class="user-role">{{ currentUser.role | titlecase }}</span>
+              </div>
+            </div>
+          }
+          <button class="logout-btn" (click)="onLogout()">
+            <span>🚪</span> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="main-content">
+      
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading your portfolio data...</p>
+      </div>
+
+      <!-- Dashboard Content -->
+      <div *ngIf="!isLoading" class="dashboard-content">
+        
+        <!-- Stats Cards -->
+        <section class="stats-section">
+          <h3>Portfolio Overview</h3>
+          <div class="stats-grid">
+            
+            <div class="stat-card primary">
+              <div class="stat-icon">👥</div>
+              <div class="stat-content">
+                <div class="stat-value">{{ portfolioStats.totalInvestors }}</div>
+                <div class="stat-label">Total Investors</div>
+              </div>
+            </div>
+
+            <div class="stat-card success">
+              <div class="stat-icon">💰</div>
+              <div class="stat-content">
+                <div class="stat-value">{{ formatCurrency(portfolioStats.totalFunds) }}</div>
+                <div class="stat-label">Total Portfolio Value</div>
+              </div>
+            </div>
+
+            <div class="stat-card warning">
+              <div class="stat-icon">📈</div>
+              <div class="stat-content">
+                <div class="stat-value">{{ formatPercentage(portfolioStats.monthlyGrowth) }}</div>
+                <div class="stat-label">Portfolio Growth</div>
+              </div>
+            </div>
+
+            <div class="stat-card info">
+              <div class="stat-icon">🎯</div>
+              <div class="stat-content">
+                <div class="stat-value">{{ formatPercentage(portfolioStats.avgMonthlyReturn) }}</div>
+                <div class="stat-label">Avg Monthly Return</div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Success/Error Messages -->
+        @if (successMessage) {
+          <div class="alert alert-success">
+            <span class="alert-icon">✅</span>
+            {{ successMessage }}
+          </div>
+        }
+        @if (errorMessage) {
+          <div class="alert alert-error">
+            <span class="alert-icon">⚠️</span>
+            {{ errorMessage }}
+          </div>
+        }
+
+        <!-- Investors Overview -->
+        <section class="investors-section" *ngIf="investors.length > 0">
+          <h3>Investors Overview</h3>
+          <div class="investors-grid">
+            
+            <div *ngFor="let investor of investors | slice:0:6" class="investor-card">
+              <div class="investor-avatar">
+                {{ investor.name.charAt(0).toUpperCase() }}
+              </div>
+              <div class="investor-info">
+                <h4>{{ investor.name }}</h4>
+                <p>ID: {{ investor.id }}</p>
+              </div>
+              <div class="investor-actions">
+                <button class="btn-small" routerLink="/report">View Details</button>
+              </div>
+            </div>
+
+          </div>
+          
+          <div class="view-all-investors" *ngIf="investors.length > 6">
+            <a routerLink="/transactions" class="btn-outline">
+              View All {{ investors.length }} Investors
+            </a>
+          </div>
+        </section>
+
+        <!-- Empty State -->
+        <section class="empty-state" *ngIf="investors.length === 0">
+          <div class="empty-icon">📊</div>
+          <h3>No Investors Yet</h3>
+          <p>Get started by adding your first investor to the system.</p>
+          <a routerLink="/add-investor" class="btn-primary">Add First Investor</a>
+        </section>
+
+      </div>
+    </div>
+  </main>
+</div>

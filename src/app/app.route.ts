@@ -1,7 +1,7 @@
-// src/app/app.route.ts (Fixed - Remove canActivate from redirect route)
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TransactionsComponent } from './components/transactions/transactions.component';
 import { InterestComponent } from './components/interest/interest.component';
 import { BalancesComponent } from './components/balances/balances.component';
@@ -15,10 +15,11 @@ export const appRoutes: Routes = [
   // Login route - only public route
   { path: 'login', component: AdminLoginComponent },
   
-  // Default redirect route - NO canActivate here
-  { path: '', redirectTo: '/transactions', pathMatch: 'full' },
+  // Default redirect to dashboard
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   
-  // All application routes require authentication
+  // Protected routes
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard] },
   { path: 'interest-rates', component: InterestComponent, canActivate: [AuthGuard] },
   { path: 'report', component: BalancesComponent, canActivate: [AuthGuard] },

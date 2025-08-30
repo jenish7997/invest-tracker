@@ -1,50 +1,79 @@
-<h2>Add Money</h2>
-
-<form [formGroup]="transactionForm" (ngSubmit)="onSubmit()" class="grid gap-3">
-
-  <!-- Investor Dropdown -->
-  <label for="investor">Investor</label>
-  <select id="investor" formControlName="investorId">
-    <option value="">-- Select Investor --</option>
-    <option *ngFor="let inv of investors" [value]="inv.id">{{ inv.name }}</option>
-  </select>
-  <div *ngIf="transactionForm.get('investorId')?.invalid && transactionForm.get('investorId')?.touched" class="error">
-    Investor is required
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">
+      <span class="page-icon">💰</span>
+      Record Investment
+    </h1>
+    <p class="page-subtitle">Add money to an investor's portfolio</p>
   </div>
 
-  <!-- Amount Input -->
-  <label for="amount">Amount</label>
-  <input id="amount" type="number" formControlName="amount">
-  <div *ngIf="transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched" class="error">
-    Amount must be greater than 0
+  <div class="form-card">
+    <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="investor" class="form-label">Select Investor</label>
+        <select 
+          id="investor" 
+          formControlName="investorId" 
+          class="form-select"
+          [class.error]="transactionForm.get('investorId')?.invalid && transactionForm.get('investorId')?.touched"
+        >
+          <option value="">-- Select Investor --</option>
+          <option *ngFor="let inv of investors" [value]="inv.id">{{ inv.name }}</option>
+        </select>
+        <div *ngIf="transactionForm.get('investorId')?.invalid && transactionForm.get('investorId')?.touched" class="form-error">
+          Investor is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="amount" class="form-label">Investment Amount</label>
+        <div class="input-wrapper">
+          <span class="input-prefix">₹</span>
+          <input 
+            id="amount" 
+            type="number" 
+            formControlName="amount" 
+            class="form-input with-prefix"
+            placeholder="0.00"
+            [class.error]="transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched"
+          />
+        </div>
+        <div *ngIf="transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched" class="form-error">
+          Amount must be greater than 0
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="date" class="form-label">Investment Date</label>
+        <input 
+          id="date" 
+          type="date" 
+          formControlName="date" 
+          class="form-input"
+          [class.error]="transactionForm.get('date')?.invalid && transactionForm.get('date')?.touched"
+        />
+        <div *ngIf="transactionForm.get('date')?.invalid && transactionForm.get('date')?.touched" class="form-error">
+          Date is required
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="transactionForm.invalid || loading">
+          <span *ngIf="loading" class="btn-spinner"></span>
+          <span class="btn-icon">💾</span>
+          {{ loading ? 'Recording...' : 'Record Investment' }}
+        </button>
+      </div>
+    </form>
+
+    <!-- Messages -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <span class="alert-icon">✅</span>
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <span class="alert-icon">❌</span>
+      {{ errorMessage }}
+    </div>
   </div>
-
-  <!-- Date Input -->
-  <label for="date">Date</label>
-  <input id="date" type="date" formControlName="date">
-  <div *ngIf="transactionForm.get('date')?.invalid && transactionForm.get('date')?.touched" class="error">
-    Date is required
-  </div>
-
-  <!-- Submit Button -->
-  <button type="submit" [disabled]="transactionForm.invalid">Save</button>
-</form>
-
-
-<!-- 
-<table *ngIf="SelectedInvestorTransection.length">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Type</th>
-      <th>Amount</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let r of SelectedInvestorTransection">
-      <td>{{  r.date?.toDate() | date:'shortDate' }}</td>
-      <td>{{ r.type }}</td>
-      <td>{{ r.amount }}</td>
-    </tr>
-  </tbody>
-</table> -->
+</div>

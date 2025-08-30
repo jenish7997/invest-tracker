@@ -1,48 +1,173 @@
-<div class="login-container">
-  <div class="login-card">
-    <div class="login-header">
-      <h2>Investment Tracker</h2>
-      <p>Please login to access the application</p>
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Header -->
+    <div class="auth-header">
+      <div class="logo">
+        <div class="logo-icon">💰</div>
+        <h1>InvestTracker</h1>
+      </div>
+      <p class="subtitle">Professional Investment Management Platform</p>
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <!-- Navigation Tabs -->
+    <div class="auth-tabs">
+      <button 
+        class="tab-btn" 
+        [class.active]="isLoginMode"
+        (click)="switchToLogin()"
+        type="button"
+      >
+        Sign In
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="!isLoginMode"
+        (click)="switchToRegister()"
+        type="button"
+      >
+        Register
+      </button>
+    </div>
+
+    <!-- Login Form -->
+    <form 
+      *ngIf="isLoginMode" 
+      [formGroup]="loginForm" 
+      (ngSubmit)="onLogin()"
+      class="auth-form"
+    >
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="loginEmail">Email Address</label>
         <input
-          id="username"
-          type="text"
-          class="form-control"
-          formControlName="username"
-          placeholder="Enter username"
-          [class.error]="loginForm.get('username')?.touched && loginForm.get('username')?.invalid"
+          type="email"
+          id="loginEmail"
+          formControlName="email"
+          placeholder="Enter your email"
+          [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
         />
-        <div *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid" class="error-message">
-          Username is required
+        <div class="field-error" *ngIf="getFieldError(loginForm, 'email')">
+          {{ getFieldError(loginForm, 'email') }}
         </div>
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="loginPassword">Password</label>
         <input
-          id="password"
           type="password"
-          class="form-control"
+          id="loginPassword"
           formControlName="password"
-          placeholder="Enter password"
-          [class.error]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+          placeholder="Enter your password"
+          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
         />
-        <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error-message">
-          Password is required
+        <div class="field-error" *ngIf="getFieldError(loginForm, 'password')">
+          {{ getFieldError(loginForm, 'password') }}
         </div>
       </div>
 
-      <div *ngIf="errorMessage" class="alert alert-error">
-        {{ errorMessage }}
+      <div class="demo-credentials">
+        <p><strong>Demo Credentials:</strong></p>
+        <p>Email: <code>admin@investtracker.com</code></p>
+        <p>Password: <code>any password</code></p>
       </div>
 
-      <button type="submit" class="login-btn" [disabled]="loading">
-        {{ loading ? 'Signing in...' : 'Sign In' }}
+      <button 
+        type="submit" 
+        class="auth-btn primary"
+        [disabled]="loginForm.invalid || isLoading"
+      >
+        <span *ngIf="isLoading" class="loading-spinner"></span>
+        {{ isLoading ? 'Signing In...' : 'Sign In' }}
       </button>
     </form>
+
+    <!-- Register Form -->
+    <form 
+      *ngIf="!isLoginMode" 
+      [formGroup]="registerForm" 
+      (ngSubmit)="onRegister()"
+      class="auth-form"
+    >
+      <div class="form-group">
+        <label for="registerName">Full Name</label>
+        <input
+          type="text"
+          id="registerName"
+          formControlName="name"
+          placeholder="Enter your full name"
+          [class.error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+        />
+        <div class="field-error" *ngIf="getFieldError(registerForm, 'name')">
+          {{ getFieldError(registerForm, 'name') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="registerEmail">Email Address</label>
+        <input
+          type="email"
+          id="registerEmail"
+          formControlName="email"
+          placeholder="Enter your email"
+          [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+        />
+        <div class="field-error" *ngIf="getFieldError(registerForm, 'email')">
+          {{ getFieldError(registerForm, 'email') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="registerPassword">Password</label>
+        <input
+          type="password"
+          id="registerPassword"
+          formControlName="password"
+          placeholder="Create a password"
+          [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+        />
+        <div class="field-error" *ngIf="getFieldError(registerForm, 'password')">
+          {{ getFieldError(registerForm, 'password') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+          [class.error]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+        />
+        <div class="field-error" *ngIf="registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched">
+          Passwords do not match
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="auth-btn primary"
+        [disabled]="registerForm.invalid || isLoading"
+      >
+        <span *ngIf="isLoading" class="loading-spinner"></span>
+        {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <!-- Messages -->
+    <div class="message-container">
+      <div *ngIf="errorMessage" class="message error">
+        <span class="message-icon">⚠️</span>
+        {{ errorMessage }}
+      </div>
+      <div *ngIf="successMessage" class="message success">
+        <span class="message-icon">✅</span>
+        {{ successMessage }}
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="auth-footer">
+      <p>&copy; 2024 InvestTracker. Professional Investment Management.</p>
+    </div>
   </div>
 </div>

@@ -15,6 +15,9 @@ export class AddmoneyComponent implements OnInit {
   investors: Investor[] = [];
   transactionForm!: FormGroup;
   SelectedInvestorTransection: any[]=[];
+  loading = false;
+  successMessage = '';
+  errorMessage = '';
 
   constructor(private fb: FormBuilder, private svc: InvestmentService) {}
 
@@ -38,33 +41,40 @@ export class AddmoneyComponent implements OnInit {
   // }
 
   onSubmit() {
-  if (this.transactionForm.valid) {
-    const formData = this.transactionForm.value;
+    if (this.transactionForm.valid) {
+      this.loading = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+      
+      const formData = this.transactionForm.value;
+      const investor = this.investors.find(i => i.id === formData.investorId);
 
-    const investor = this.investors.find(i => i.id === formData.investorId);
+      const transactionData: Omit<Transaction, 'id'> = {
+        investorId: formData.investorId,
+        investorName: investor ? investor.name : '',
+        amount: formData.amount,
+        date: new Date(formData.date),
+        type: 'invest'
+      };
 
-    const transactionData: Omit<Transaction, 'id'> = {
-      investorId: formData.investorId,
-      investorName: investor ? investor.name : '',
-      amount: formData.amount,
-      date: new Date(formData.date),
-      type: 'invest'
-    };
-
-    this.svc.addTransaction(transactionData)
-      .then(() => {
-        this.transactionForm.reset({
-          investorId: '',
-          amount: null,
-          date: ''
+      this.svc.addTransaction(transactionData)
+        .then(() => {
+          this.loading = false;
+          this.successMessage = 'Investment recorded successfully!';
+          this.transactionForm.reset({
+            investorId: '',
+            amount: null,
+            date: ''
+          });
+        })
+        .catch(error => {
+          this.loading = false;
+          this.errorMessage = 'Error recording investment. Please try again.';
+          console.error('Error saving transaction:', error);
         });
-      })
-      .catch(error => {
-        console.error('Error saving transaction:', error);
-      });
-  } else {
-    this.transactionForm.markAllAsTouched();
+    } else {
+      this.transactionForm.markAllAsTouched();
+    }
   }
-}
 
 }

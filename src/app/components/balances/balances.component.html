@@ -1,45 +1,92 @@
-<h2>Monthly Balances</h2>
-
-<form (ngSubmit)="run()" [formGroup]="form" class="grid">
-  <div>
-    <label>Investor</label>
-    <select formControlName="investorId">
-      <option value="">-- Select --</option>
-      <option *ngFor="let i of investors" [value]="i.id">{{ i.name }}</option>
-    </select>
-    <span *ngIf="form.get('investorId')?.invalid && form.get('investorId')?.touched" style="color:red">
-      Please select an investor
-    </span>
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">
+      <span class="page-icon">📊</span>
+      Monthly Balances
+    </h1>
+    <p class="page-subtitle">Calculate investor portfolio balances over time</p>
   </div>
 
-  <div>
-    <label>Start Month</label>
-    <input type="month" formControlName="startMonthKey">
+  <div class="form-card">
+    <form (ngSubmit)="run()" [formGroup]="form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="investor" class="form-label">Select Investor</label>
+          <select 
+            id="investor"
+            formControlName="investorId" 
+            class="form-select"
+            [class.error]="form.get('investorId')?.invalid && form.get('investorId')?.touched"
+          >
+            <option value="">-- Select Investor --</option>
+            <option *ngFor="let i of investors" [value]="i.id">{{ i.name }}</option>
+          </select>
+          <div *ngIf="form.get('investorId')?.invalid && form.get('investorId')?.touched" class="form-error">
+            Please select an investor
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="startMonth" class="form-label">Start Month</label>
+          <input 
+            id="startMonth"
+            type="month" 
+            formControlName="startMonthKey" 
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="endMonth" class="form-label">End Month</label>
+          <input 
+            id="endMonth"
+            type="month" 
+            formControlName="endMonthKey" 
+            class="form-input"
+          />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+          <span class="btn-icon">📊</span>
+          Calculate Balances
+        </button>
+      </div>
+    </form>
   </div>
 
-  <div>
-    <label>End Month</label>
-    <input type="month" formControlName="endMonthKey">
+  <!-- Results Table -->
+  <div *ngIf="rows.length" class="data-card">
+    <div class="card-header">
+      <h2 class="card-title">
+        <span class="card-icon">📈</span>
+        Balance History
+      </h2>
+      <div class="card-badge">{{ rows.length }} Months</div>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Interest Rate</th>
+            <th>Net In/Out</th>
+            <th>Balance (End of Month)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of rows">
+            <td class="month-cell">{{ r.monthKey }}</td>
+            <td class="rate-cell">{{ r.rate | percent:'1.2-2' }}</td>
+            <td class="delta-cell" [class.positive]="r.delta > 0" [class.negative]="r.delta < 0">
+              ₹{{ r.delta | number:'1.0-2' }}
+            </td>
+            <td class="balance-cell">₹{{ r.balance | number:'1.0-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-
-  <button type="submit" [disabled]="form.invalid">Compute</button>
-</form>
-
-<table *ngIf="rows.length">
-  <thead>
-    <tr>
-      <th>Month</th>
-      <th>Rate</th>
-      <th>Net In/Out</th>
-      <th>Balance (end of month)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let r of rows">
-      <td>{{ r.monthKey }}</td>
-      <td>{{ r.rate | percent:'1.2-2' }}</td>
-      <td>{{ r.delta | number:'1.0-2' }}</td>
-      <td><strong>{{ r.balance | number:'1.0-2' }}</strong></td>
-    </tr>
-  </tbody>
-</table>
+</div>

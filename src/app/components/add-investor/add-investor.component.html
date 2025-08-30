@@ -1,30 +1,46 @@
-<div class="container mt-4">
-  <h2>Add New Investor</h2>
-
-  <form [formGroup]="investorForm" (ngSubmit)="onSubmit()">
-    <div class="form-group mb-3">
-      <label for="name">Investor Name</label>
-      <input
-        id="name"
-        type="text"
-        class="form-control"
-        formControlName="name"
-        placeholder="Enter investor name"
-      />
-      <div *ngIf="investorForm.get('name')?.touched && investorForm.get('name')?.invalid" class="text-danger">
-        Name is required
-      </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary" [disabled]="loading">
-      {{ loading ? 'Saving...' : 'Add Investor' }}
-    </button>
-  </form>
-
-  <div *ngIf="successMessage" class="alert alert-success mt-3">
-    {{ successMessage }}
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">
+      <span class="page-icon">👤</span>
+      Add New Investor
+    </h1>
+    <p class="page-subtitle">Add a new investor to your portfolio</p>
   </div>
-  <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-    {{ errorMessage }}
+
+  <div class="form-card">
+    <form [formGroup]="investorForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name" class="form-label">Investor Name</label>
+        <input
+          id="name"
+          type="text"
+          class="form-input"
+          formControlName="name"
+          placeholder="Enter investor name"
+          [class.error]="investorForm.get('name')?.touched && investorForm.get('name')?.invalid"
+        />
+        <div *ngIf="investorForm.get('name')?.touched && investorForm.get('name')?.invalid" class="form-error">
+          Name is required
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="loading || investorForm.invalid">
+          <span *ngIf="loading" class="btn-spinner"></span>
+          <span class="btn-icon">💾</span>
+          {{ loading ? 'Saving...' : 'Add Investor' }}
+        </button>
+      </div>
+    </form>
+
+    <!-- Messages -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <span class="alert-icon">✅</span>
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <span class="alert-icon">❌</span>
+      {{ errorMessage }}
+    </div>
   </div>
 </div>

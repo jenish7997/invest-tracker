@@ -17,3 +17,27 @@ export interface Investor {
   id?: string;
   name: string;
 }
+
+export interface User {
+  id?: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'user';
+  createdAt: Date;
+  isActive: boolean;
+}
+
+export interface InvestmentSummary {
+  totalInvestment: number;
+  totalWithdrawals: number;
+  currentBalance: number;
+  totalReturns: number;
+  roi: number;
+}
+
+export interface PortfolioStats {
+  totalInvestors: number;
+  totalFunds: number;
+  monthlyGrowth: number;
+  avgMonthlyReturn: number;
+}

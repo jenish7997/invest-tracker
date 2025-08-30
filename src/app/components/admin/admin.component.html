@@ -1,25 +1,58 @@
-<div class="container">
-  <div class="admin-header">
-    <h1>Admin Panel</h1>
-    <button class="logout-btn" (click)="onLogout()">Logout</button>
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <span class="page-icon">⚙️</span>
+        Admin Panel
+      </h1>
+      <p class="page-subtitle">Manage investors and system settings</p>
+    </div>
+    <button class="logout-btn" (click)="onLogout()">
+      <span class="btn-icon">🚪</span>
+      Logout
+    </button>
   </div>
 
   <!-- Investors Section -->
-  <section class="card">
-    <h2>Investors</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>ID</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let inv of investors">
-          <td>{{ inv.name }}</td>
-          <td>{{ inv.id }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <section class="data-card">
+    <div class="card-header">
+      <h2 class="card-title">
+        <span class="card-icon">👥</span>
+        Investors Management
+      </h2>
+      <div class="card-badge">{{ investors.length }} Total</div>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Investor Name</th>
+            <th>Investor ID</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inv of investors; let i = index">
+            <td class="investor-name">
+              <div class="name-cell">
+                <div class="investor-avatar">{{ inv.name.charAt(0).toUpperCase() }}</div>
+                {{ inv.name }}
+              </div>
+            </td>
+            <td class="investor-id">{{ inv.id }}</td>
+            <td>
+              <span class="status-badge active">Active</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!investors.length" class="empty-state">
+      <div class="empty-icon">👤</div>
+      <p class="empty-message">No investors found</p>
+      <p class="empty-subtitle">Add your first investor to get started</p>
+    </div>
   </section>
 </div>
