@@ -1,0 +1,30 @@
+<div class="container mt-4">
+  <h2>Add New Investor</h2>
+
+  <form [formGroup]="investorForm" (ngSubmit)="onSubmit()">
+    <div class="form-group mb-3">
+      <label for="name">Investor Name</label>
+      <input
+        id="name"
+        type="text"
+        class="form-control"
+        formControlName="name"
+        placeholder="Enter investor name"
+      />
+      <div *ngIf="investorForm.get('name')?.touched && investorForm.get('name')?.invalid" class="text-danger">
+        Name is required
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="loading">
+      {{ loading ? 'Saving...' : 'Add Investor' }}
+    </button>
+  </form>
+
+  <div *ngIf="successMessage" class="alert alert-success mt-3">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+    {{ errorMessage }}
+  </div>
+</div>

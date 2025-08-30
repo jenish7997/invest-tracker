@@ -1,0 +1,95 @@
+.container { 
+  max-width: 1000px; 
+  margin: 0 auto; 
+  padding: 16px; 
+  font-family: Arial, Helvetica, sans-serif; 
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #eee;
+}
+
+.header h1 {
+  margin: 0;
+  color: #333;
+}
+
+.logout-btn {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
+}
+
+.nav { 
+  display: flex; 
+  gap: 16px; 
+  margin-bottom: 16px; 
+}
+
+.nav a { 
+  text-decoration: none; 
+  padding: 6px 10px; 
+  border: 1px solid #ddd; 
+  border-radius: 8px; 
+}
+
+.nav a:hover { 
+  background: #f2f2f2; 
+}
+
+.nav a.active {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.nav a.admin-link {
+  background: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+
+.nav a.admin-link:hover {
+  background: #5a6268;
+  border-color: #5a6268;
+}
+
+.nav a.admin-link.active {
+  background: #495057;
+  border-color: #495057;
+}
+
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+}
+
+th, td { 
+  border: 1px solid #eee; 
+  padding: 8px; 
+  text-align: left; 
+}
+
+input, select, button { 
+  padding: 6px 8px; 
+  border-radius: 6px; 
+  border: 1px solid #ccc; 
+}
+
+button { 
+  cursor: pointer; 
+}

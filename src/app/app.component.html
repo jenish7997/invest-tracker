@@ -1,0 +1,26 @@
+<div class="container" *ngIf="authService.isAuthenticated()">
+  <div class="header">
+    <h1>{{ title }}</h1>
+    <button class="logout-btn" (click)="onLogout()">Logout</button>
+  </div>
+
+  <nav class="nav">
+    <a routerLink="/add-investor" routerLinkActive="active">Add Investor</a>
+    <a routerLink="/add-money" routerLinkActive="active">Add Money</a>
+    <a routerLink="/withdraw" routerLinkActive="active">Withdraw</a>
+    <a routerLink="/transactions" routerLinkActive="active">Transactions</a>
+    <a routerLink="/interest-rates" routerLinkActive="active">Interest Rates</a>
+    <a routerLink="/report" routerLinkActive="active">Report</a>
+    <a routerLink="/admin" routerLinkActive="active" class="admin-link">Admin</a>
+  </nav>
+
+  <!-- Router renders components here -->
+  <section>
+    <router-outlet></router-outlet>
+  </section>
+</div>
+
+<!-- Show router-outlet for login page when not authenticated -->
+<div *ngIf="!authService.isAuthenticated()">
+  <router-outlet></router-outlet>
+</div>

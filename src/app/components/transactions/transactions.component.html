@@ -1,0 +1,27 @@
+<h2>New Transaction</h2>
+
+<form [formGroup]="transactionForm" class="grid gap-3">
+  <label for="investor">Investor</label>
+  <select id="investor" formControlName="investorId"
+          (change)="onInvestorChange($event)">
+    <option value="">-- Select Investor --</option>
+    <option *ngFor="let inv of investors" [value]="inv.id">{{ inv.name }}</option>
+  </select> 
+</form>
+
+<table *ngIf="SelectedInvestorTransection.length">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of SelectedInvestorTransection">
+      <td>{{  r.date?.toDate() | date:'shortDate' }}</td>
+      <td>{{ r.type }}</td>
+      <td>{{ r.amount }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,45 @@
+<h2>Monthly Balances</h2>
+
+<form (ngSubmit)="run()" [formGroup]="form" class="grid">
+  <div>
+    <label>Investor</label>
+    <select formControlName="investorId">
+      <option value="">-- Select --</option>
+      <option *ngFor="let i of investors" [value]="i.id">{{ i.name }}</option>
+    </select>
+    <span *ngIf="form.get('investorId')?.invalid && form.get('investorId')?.touched" style="color:red">
+      Please select an investor
+    </span>
+  </div>
+
+  <div>
+    <label>Start Month</label>
+    <input type="month" formControlName="startMonthKey">
+  </div>
+
+  <div>
+    <label>End Month</label>
+    <input type="month" formControlName="endMonthKey">
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">Compute</button>
+</form>
+
+<table *ngIf="rows.length">
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Rate</th>
+      <th>Net In/Out</th>
+      <th>Balance (end of month)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of rows">
+      <td>{{ r.monthKey }}</td>
+      <td>{{ r.rate | percent:'1.2-2' }}</td>
+      <td>{{ r.delta | number:'1.0-2' }}</td>
+      <td><strong>{{ r.balance | number:'1.0-2' }}</strong></td>
+    </tr>
+  </tbody>
+</table>
